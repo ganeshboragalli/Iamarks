@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCB Marks Calculator</title>
+    <style>
+        /* General styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: white;
+            color: #333;
+        }
+        .container {
+            width: 90vw;
+            max-width: 500px;
+            padding: 30px;
+            background: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-10px);
+        }
+        /* Green box for the title */
+        .title-box {
+            background-color: #28a745; /* Green background */
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: white;
+            font-size: 1.8em;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+            text-align: left;
+        }
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        input[type="number"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .cie-button {
+            background-color: #28a745; /* Green button */
+            color: white;
+        }
+        .cie-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+        .skill-button {
+            background-color: #ffeb3b; /* Yellow */
+            color: black;
+        }
+        .skill-button:hover {
+            background-color: #fbc02d;
+            transform: scale(1.05);
+        }
+        .activity-button {
+            background-color: #9e9e9e; /* Grey */
+            color: white;
+        }
+        .activity-button:hover {
+            background-color: #757575;
+            transform: scale(1.05);
+        }
+        
+        /* Styling for the result section */
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-weight: bold;
+            text-align: left;
+        }
+        .result p {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        /* Styling for the final total marks box */
+        .total-marks-box {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #dc3545; /* Red box */
+            color: white;
+            font-size: 1.2em;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            width: 100%;
+            max-width: 250px; /* Smaller size */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Media query for mobile responsiveness */
+        @media screen and (max-width: 600px) {
+            h2 {
+                font-size: 1.5em;
+            }
+            .container {
+                padding: 20px;
+            }
+            .form-group {
+                margin-bottom: 12px;
+            }
+            input[type="number"] {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            .button {
+                padding: 10px;
+                font-size: 1em;
+            }
+            .result p {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Title inside green box -->
+    <div class="title-box">
+        <h2>Marks Calculator</h2>
+    </div>
+
+    <div class="form-group">
+        <label for="cie1">CIE 1:</label>
+        <input type="number" id="cie1" min="0" max="100" required>
+    </div>
+    <div class="form-group">
+        <label for="cie2">CIE 2:</label>
+        <input type="number" id="cie2" min="0" max="100" required>
+    </div>
+    <div class="form-group">
+        <label for="cie3">CIE 3:</label>
+        <input type="number" id="cie3" min="0" max="100" required>
+    </div>
+    <div class="form-group">
+        <label for="skill1">Skill Test 1:</label>
+        <input type="number" id="skill1" min="0" max="100" required>
+    </div>
+    <div class="form-group">
+        <label for="skill2">Skill Test 2:</label>
+        <input type="number" id="skill2" min="0" max="100" required>
+    </div>
+    <div class="form-group">
+        <label for="activity">Activity Marks:</label>
+        <input type="number" id="activity" min="0" max="100" required>
+    </div>
+    <button class="button cie-button" onclick="calculateMarks()">Calculate Total Marks</button>
+
+    <div class="result" id="result">
+        <!-- Individual result displays -->
+        <p>CIE Average Marks: <span id="cieAverage"></span></p>
+        <p>Skill Test 1 Average (out of 20): <span id="skillTest1Average"></span></p>
+        <p>Skill Test 2 Average (out of 20): <span id="skillTest2Average"></span></p>
+        <p>Combined Skill Test Average: <span id="combinedSkillAverage"></span></p>
+        <p>Activity Marks: <span id="activityMarks"></span></p>
+    </div>
+
+    <!-- Final Total Marks Box -->
+    <div class="total-marks-box" id="totalMarksBox">
+        <strong>Total Marks: <span id="totalMarks"></span></strong>
+    </div>
+</div>
+
+<script>
+    function calculateMarks() {
+        // Get values from the input fields
+        const cie1 = parseFloat(document.getElementById("cie1").value) || 0;
+        const cie2 = parseFloat(document.getElementById("cie2").value) || 0;
+        const cie3 = parseFloat(document.getElementById("cie3").value) || 0;
+        const skill1 = parseFloat(document.getElementById("skill1").value) || 0;
+        const skill2 = parseFloat(document.getElementById("skill2").value) || 0;
+        const activity = parseFloat(document.getElementById("activity").value) || 0;
+
+        // Calculate the averages and total marks
+        const cieAverage = (cie1 + cie2 + cie3) / 3;
+        const skill1Average = skill1 / 5;
+        const skill2Average = skill2 / 5;
+        const skillTestAverage = (skill1Average + skill2Average) / 2;
+        const totalMarks = cieAverage + skillTestAverage + activity;
+
+        // Display the results
+        document.getElementById("cieAverage").textContent = cieAverage.toFixed(2);
+        document.getElementById("skillTest1Average").textContent = skill1Average.toFixed(2);
+        document.getElementById("skillTest2Average").textContent = skill2Average.toFixed(2);
+        document.getElementById("combinedSkillAverage").textContent = skillTestAverage.toFixed(2);
+        document.getElementById("activityMarks").textContent = activity;
+        document.getElementById("totalMarks").textContent = totalMarks.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
